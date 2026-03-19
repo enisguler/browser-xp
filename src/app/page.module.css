@@ -1,0 +1,171 @@
+.page {
+  min-height: 100vh;
+  padding: 32px 18px 48px;
+}
+
+.main {
+  width: min(1500px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 24px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 2.1fr) minmax(320px, 0.9fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.heroCopy,
+.sidebarPanel,
+.workbench {
+  border: 1px solid rgba(216, 233, 255, 0.16);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(13, 27, 52, 0.86), rgba(8, 18, 36, 0.9)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent);
+  box-shadow:
+    0 24px 60px rgba(3, 11, 25, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(22px);
+}
+
+.heroCopy {
+  padding: 32px;
+  display: grid;
+  gap: 24px;
+}
+
+.kicker {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: rgba(167, 212, 255, 0.12);
+  border: 1px solid rgba(167, 212, 255, 0.24);
+  color: #d7ecff;
+  font-size: 0.84rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.heroCopy h1 {
+  max-width: 12ch;
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  line-height: 0.96;
+  letter-spacing: -0.05em;
+}
+
+.lead {
+  max-width: 70ch;
+  color: var(--text-muted);
+  font-size: 1.06rem;
+  line-height: 1.75;
+}
+
+.factGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.factCard {
+  padding: 18px;
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(36, 87, 150, 0.22), rgba(15, 30, 58, 0.7));
+  border: 1px solid rgba(167, 212, 255, 0.16);
+  display: grid;
+  gap: 10px;
+}
+
+.factCard span {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(219, 233, 255, 0.72);
+}
+
+.factCard strong {
+  font-size: 1.55rem;
+  letter-spacing: -0.04em;
+}
+
+.factCard p {
+  color: var(--text-muted);
+  line-height: 1.55;
+  font-size: 0.94rem;
+}
+
+.sidebar {
+  display: grid;
+  gap: 16px;
+}
+
+.sidebarPanel {
+  padding: 22px 24px;
+  display: grid;
+  gap: 14px;
+}
+
+.sidebarPanel h2 {
+  font-size: 1.15rem;
+  letter-spacing: -0.03em;
+}
+
+.sidebarPanel p,
+.sidebarList {
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.sidebarList {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.workbench {
+  padding: 20px;
+}
+
+@media (max-width: 1100px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .heroCopy h1 {
+    max-width: 14ch;
+  }
+}
+
+@media (max-width: 900px) {
+  .factGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-inline: 12px;
+  }
+
+  .heroCopy,
+  .sidebarPanel,
+  .workbench {
+    border-radius: 22px;
+  }
+
+  .heroCopy {
+    padding: 24px 20px;
+  }
+
+  .heroCopy h1 {
+    font-size: 2.5rem;
+  }
+
+  .lead {
+    font-size: 0.98rem;
+  }
+}
