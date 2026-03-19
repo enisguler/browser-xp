@@ -3,8 +3,6 @@
 Next.js front-end for booting the local `xp.img` disk in the browser with `v86`
 and on-demand 2 MB disk chunks.
 
-demo will be available on httos://www.morgul.app soon
-
 ## What it does
 
 - Boots `xp.img` in `v86` from a Next.js page.
