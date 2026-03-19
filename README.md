@@ -6,7 +6,7 @@ and on-demand 2 MB disk chunks.
 ## What it does
 
 - Boots `xp.img` in `v86` from a Next.js page.
-- Serves aligned `xp-START-END.img` partfile requests from a local disk file.
+- Serves the local disk through byte ranges with fixed 2 MB read alignment.
 - Keeps the repository clean by **not** committing the XP disk image itself.
 - Vendors the `v86` runtime assets needed by the browser.
 
@@ -54,7 +54,7 @@ Then open [http://127.0.0.1:3000](http://127.0.0.1:3000).
 - `/`: XP launcher UI and embedded emulator surface.
 - `/api/xp-meta`: disk metadata used by the UI and health checks.
 - `/api/xp-image/xp.img`: full disk endpoint with byte-range support.
-- `/api/xp-image/xp-START-END.img`: fixed 2 MB partfile endpoint for `v86`.
+- `/api/xp-image/xp-START-END.img`: optional explicit 2 MB chunk endpoint.
 
 ## Verification completed
 
@@ -71,3 +71,8 @@ This project was verified locally with:
 - The repository intentionally excludes the Windows XP disk image.
 - The guest network stack is intentionally not configured in this pass.
 - The app assumes the XP image has already been prepared for `v86` use.
+- For Windows 2000/XP, the official `v86` docs call out one critical prep step:
+  the guest must be changed from `ACPI Uniprocessor PC` to `Standard PC`.
+  Without that conversion, Chromium commonly throws `Maximum call stack size exceeded`
+  or `too much recursion` during startup even when the website and chunk streaming
+  are working correctly.

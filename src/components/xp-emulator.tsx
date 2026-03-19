@@ -14,7 +14,7 @@ type V86Options = {
   acpi?: boolean;
   autostart?: boolean;
   bios: { url: string };
-  cpuid_level?: number;
+  disable_jit?: boolean;
   disable_keyboard?: boolean;
   disable_mouse?: boolean;
   hda: {
@@ -127,6 +127,30 @@ function getFileLabel(fileName?: string) {
   return fileName.split("/").at(-1) ?? fileName;
 }
 
+function getV86BootError(error: unknown) {
+  const message =
+    error instanceof Error
+      ? `${error.name}: ${error.message}`
+      : typeof error === "string"
+        ? error
+        : "";
+
+  const lowerMessage = message.toLowerCase();
+
+  if (
+    lowerMessage.includes("too much recursion") ||
+    lowerMessage.includes("maximum call stack size exceeded")
+  ) {
+    return {
+      detail:
+        "v86 crashed while starting the XP guest. The official v86 Windows 2000/XP docs say this stack-overflow pattern usually means the image still uses ACPI Uniprocessor PC and needs to be switched to Standard PC before it will boot reliably in Chromium.",
+      short: "The XP image needs the Standard PC conversion for v86.",
+    };
+  }
+
+  return null;
+}
+
 export default function XPEmulator({ manifest }: { manifest: DiskManifest }) {
   const screenContainerRef = useRef<HTMLDivElement | null>(null);
   const emulatorRef = useRef<V86Instance | null>(null);
@@ -170,6 +194,32 @@ export default function XPEmulator({ manifest }: { manifest: DiskManifest }) {
     }
 
     let cancelled = false;
+    const handleBootFailure = (cause: unknown) => {
+      const mapped = getV86BootError(cause);
+
+      if (!mapped) {
+        return;
+      }
+
+      setRunning(false);
+      setError(mapped.detail);
+      setStatus(mapped.short);
+      setDownloadStatus(
+        "The site and disk streaming are working, but this XP image still needs the guest-side HAL change that v86 expects.",
+      );
+      pushLog("Detected the known v86 Windows 2000/XP recursion failure.");
+    };
+
+    const handleWindowError = (event: ErrorEvent) => {
+      handleBootFailure(event.error ?? event.message);
+    };
+
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      handleBootFailure(event.reason);
+    };
+
+    window.addEventListener("error", handleWindowError);
+    window.addEventListener("unhandledrejection", handleUnhandledRejection);
 
     const boot = async () => {
       const screenContainer = screenContainerRef.current;
@@ -204,14 +254,14 @@ export default function XPEmulator({ manifest }: { manifest: DiskManifest }) {
           bios: { url: "/vendor/v86/seabios.bin" },
           vga_bios: { url: "/vendor/v86/vgabios.bin" },
           acpi: false,
-          cpuid_level: 6,
+          disable_jit: true,
           disable_keyboard: false,
           disable_mouse: false,
           hda: {
             url: `/api/xp-image/${manifest.alias}`,
             async: true,
             size: manifest.size,
-            use_parts: true,
+            use_parts: false,
             fixed_chunk_size: manifest.chunkSize,
           },
           autostart: true,
@@ -278,6 +328,8 @@ export default function XPEmulator({ manifest }: { manifest: DiskManifest }) {
 
     return () => {
       cancelled = true;
+      window.removeEventListener("error", handleWindowError);
+      window.removeEventListener("unhandledrejection", handleUnhandledRejection);
       const instance = emulatorRef.current;
       emulatorRef.current = null;
 
@@ -408,8 +460,8 @@ export default function XPEmulator({ manifest }: { manifest: DiskManifest }) {
             <span className={styles.statusLabel}>Chunk stream</span>
             <strong>{downloadStatus}</strong>
             <p>
-              The browser asks for aligned 2 MB part files, and the Next.js route
-              handler reads only those bytes from the local disk.
+              The browser asks for aligned 2 MB byte ranges, and the Next.js route
+              handler streams only those sectors from the local disk.
             </p>
           </div>
 

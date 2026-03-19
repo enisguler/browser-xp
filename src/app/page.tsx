@@ -58,8 +58,8 @@ export default async function Home() {
                 <span>Chunk count</span>
                 <strong>{manifest.totalChunks.toLocaleString()}</strong>
                 <p>
-                  Each request resolves to <code>xp-START-END.img</code>{" "}
-                  style part URLs that match v86&rsquo;s fixed partfile loader.
+                  v86 reads the disk lazily through HTTP byte ranges, and each read
+                  is rounded to a fixed 2 MB boundary for predictable chunking.
                 </p>
               </article>
             </div>
@@ -72,7 +72,7 @@ export default async function Home() {
                 <li>Raw disk: <code>{manifest.alias}</code></li>
                 <li>Chunk size: <code>{formatBytes(manifest.chunkSize)}</code></li>
                 <li>Disk source: {manifest.sourceLabel}</li>
-                <li>XP guest assumption: switched to Standard PC for v86 stability</li>
+                <li>XP guest requirement: convert ACPI to Standard PC for v86 stability</li>
               </ul>
             </div>
 

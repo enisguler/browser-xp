@@ -22,7 +22,7 @@ function resolveDiskPath() {
     return path.resolve(/*turbopackIgnore: true*/ configured);
   }
 
-  return path.join(process.cwd(), "..", DISK_ALIAS);
+  return path.join(/*turbopackIgnore: true*/ process.cwd(), "..", DISK_ALIAS);
 }
 
 export async function getDiskManifest(): Promise<DiskManifest> {
