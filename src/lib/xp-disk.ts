@@ -7,7 +7,7 @@ export const DISK_ALIAS = "xp.img";
 export const DISK_CHUNK_SIZE = 2 * 1024 * 1024;
 const REMOTE_FETCH_TIMEOUT_MS = 15_000;
 const DEFAULT_REMOTE_DISK_URL =
-  "https://pub-5a48eea1e1e9440cbe4b2c1ef322d9ec.r2.dev/xp.img";
+  "https://browser-xp-r2-proxy.enisleader.workers.dev/xp.img";
 
 const CHUNK_FILE_PATTERN = /^xp-(\d+)-(\d+)\.img$/;
 const REPO_DISK_DIRECTORY = "disk-images";

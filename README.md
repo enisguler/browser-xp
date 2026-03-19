@@ -29,8 +29,8 @@ The legacy sibling lookup is still supported:
 An example file is included at [`.env.example`](/Users/teoriket/Documents/aa/browser-xp/.env.example).
 
 For Cloudflare R2, use the exact object URL for `xp.img`, not just the bucket root.
-The app is configured with the current public object URL by default, and the remote
-object must answer `HEAD` with `Content-Length` and `GET` with byte-range requests
+The app is configured with the current Cloudflare Worker proxy URL by default, and the
+remote endpoint must answer `HEAD` with `Content-Length` and `GET` with byte-range requests
 so the app can keep serving `xp-START-END.img` as fixed 2 MB chunks.
 
 ## Run it
@@ -76,6 +76,7 @@ This project was verified locally with:
 ## Notes
 
 - Cloudflare R2 is the preferred home for the large disk image instead of Git.
+- The default remote disk endpoint is `https://browser-xp-r2-proxy.enisleader.workers.dev/xp.img`.
 - The guest network stack is intentionally not configured in this pass.
 - The app assumes the XP image has already been prepared for `v86` use.
 - For Windows 2000/XP, the official `v86` docs call out one critical prep step:

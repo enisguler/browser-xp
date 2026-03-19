@@ -1,0 +1,12 @@
+{
+  "name": "browser-xp-r2-proxy",
+  "main": "src/index.js",
+  "compatibility_date": "2026-03-19",
+  "workers_dev": true,
+  "r2_buckets": [
+    {
+      "binding": "XP_BUCKET",
+      "bucket_name": "img"
+    }
+  ]
+}
