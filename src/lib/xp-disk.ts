@@ -4,7 +4,7 @@ import path from "node:path";
 import type { DiskManifest } from "./xp-disk-types";
 
 export const DISK_ALIAS = "xp.img";
-export const DISK_CHUNK_SIZE = 8 * 1024 * 1024;
+export const DISK_CHUNK_SIZE = 50 * 1024 * 1024;
 const REMOTE_FETCH_TIMEOUT_MS = 15_000;
 const DEFAULT_REMOTE_DISK_URL =
   "https://browser-xp-r2-proxy.enisleader.workers.dev/xp.img";

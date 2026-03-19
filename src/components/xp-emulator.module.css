@@ -13,6 +13,11 @@
   outline: none;
 }
 
+.cursorHidden,
+.cursorHidden * {
+  cursor: none !important;
+}
+
 .screenText,
 .screenCanvas {
   position: absolute;

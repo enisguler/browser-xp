@@ -103,6 +103,7 @@ export default function XPEmulator({ manifest }: { manifest: DiskManifest }) {
   const screenContainerRef = useRef<HTMLDivElement | null>(null);
   const emulatorRef = useRef<V86Instance | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [cursorHidden, setCursorHidden] = useState(false);
 
   useEffect(() => {
     if (!manifest.available || !screenContainerRef.current) {
@@ -194,6 +195,23 @@ export default function XPEmulator({ manifest }: { manifest: DiskManifest }) {
     };
   }, [manifest.alias, manifest.available, manifest.chunkSize, manifest.size]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      event.preventDefault();
+      setCursorHidden((value) => !value);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   if (!manifest.available) {
     return (
       <div className={styles.emptyState}>
@@ -210,7 +228,7 @@ export default function XPEmulator({ manifest }: { manifest: DiskManifest }) {
       <div
         id="screen_container"
         ref={screenContainerRef}
-        className={styles.screenContainer}
+        className={`${styles.screenContainer} ${cursorHidden ? styles.cursorHidden : ""}`}
         tabIndex={0}
         aria-label="Windows XP emulator"
       >

@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Browser XP",
   description:
-    "A Next.js front-end that boots a local Windows XP disk in the browser with 8 MB on-demand chunks.",
+    "A Next.js front-end that boots a local Windows XP disk in the browser with 50 MB on-demand chunks.",
 };
 
 export default function RootLayout({
