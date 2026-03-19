@@ -103,7 +103,7 @@ export default function XPEmulator({ manifest }: { manifest: DiskManifest }) {
   const screenContainerRef = useRef<HTMLDivElement | null>(null);
   const emulatorRef = useRef<V86Instance | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [cursorHidden, setCursorHidden] = useState(false);
+  const [pointerLocked, setPointerLocked] = useState(false);
 
   useEffect(() => {
     if (!manifest.available || !screenContainerRef.current) {
@@ -196,21 +196,38 @@ export default function XPEmulator({ manifest }: { manifest: DiskManifest }) {
   }, [manifest.alias, manifest.available, manifest.chunkSize, manifest.size]);
 
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") {
+    const handlePointerLockChange = () => {
+      setPointerLocked(document.pointerLockElement === screenContainerRef.current);
+    };
+
+    document.addEventListener("pointerlockchange", handlePointerLockChange);
+
+    return () => {
+      document.removeEventListener("pointerlockchange", handlePointerLockChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    const screenContainer = screenContainerRef.current;
+
+    if (!manifest.available || !screenContainer) {
+      return;
+    }
+
+    const requestPointerLock = () => {
+      if (document.pointerLockElement === screenContainer) {
         return;
       }
 
-      event.preventDefault();
-      setCursorHidden((value) => !value);
+      void screenContainer.requestPointerLock?.();
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    screenContainer.addEventListener("click", requestPointerLock);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      screenContainer.removeEventListener("click", requestPointerLock);
     };
-  }, []);
+  }, [manifest.available]);
 
   if (!manifest.available) {
     return (
@@ -228,7 +245,7 @@ export default function XPEmulator({ manifest }: { manifest: DiskManifest }) {
       <div
         id="screen_container"
         ref={screenContainerRef}
-        className={`${styles.screenContainer} ${cursorHidden ? styles.cursorHidden : ""}`}
+        className={`${styles.screenContainer} ${pointerLocked ? styles.pointerLocked : ""}`}
         tabIndex={0}
         aria-label="Windows XP emulator"
       >

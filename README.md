@@ -9,7 +9,7 @@ and on-demand 50 MB disk chunks.
 - Serves the local disk through byte ranges with fixed 50 MB read alignment.
 - Can boot from the public Cloudflare R2 `xp.img` object, or from a local copy.
 - Vendors the `v86` runtime assets needed by the browser.
-- Press `Esc` to toggle the emulator cursor on or off.
+- Click inside the VM to capture the mouse cursor, then press `Esc` to release it.
 
 ## Local disk setup
 
